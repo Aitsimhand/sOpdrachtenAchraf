@@ -34,6 +34,9 @@
 -- die ervoor zorgt dat alleen 'M' of 'V' als geldige waarde wordt
 -- geaccepteerd. Test deze regel en neem de gegooide foutmelding op als
 -- commentaar in de uitwerking.
+ALTER TABLE medewerkers ADD column geslacht varchar(1);
+
+ALTER TABLE medewerkers ADD constraint geslacht CHECK (geslacht = 'M' OR 'V');
 
 
 -- S1.2. Nieuwe afdeling
@@ -43,7 +46,8 @@
 -- nieuwe medewerker A DONK aangenomen. Hij krijgt medewerkersnummer 8000
 -- en valt direct onder de directeur.
 -- Voeg de nieuwe afdeling en de nieuwe medewerker toe aan de database.
-
+INSERT INTO afdelingen (anr, naam, locatie) VALUES (50, 'ONDERZOEK', 'ZWOLLE');
+INSERT INTO medewerkers (mnr, naam, voorl, functie, chef, gbdatum, maandsal, comm, afd, geslacht) VALUES (8000, 'DONK', 'A', 'DIRECTEUR', null, '1997-10-24', 5000, null, 50, 'M');
 
 -- S1.3. Verbetering op afdelingentabel
 --
@@ -54,6 +58,10 @@
 --      de nieuwe sequence.
 --   c) Op enig moment gaat het mis. De betreffende kolommen zijn te klein voor
 --      nummers van 3 cijfers. Los dit probleem op.
+CREATE SEQUENCE afdelingnummersequence INCREMENT BY 10 START WITH 60;
+INSERT INTO afdelingen (anr, naam, locatie) VALUES (nextval('afdelingnummer_sequence'), 'FINANCIEN', 'UTRECHT');
+INSERT INTO afdelingen (anr, naam, locatie) VALUES (nextval('afdelingnummer_sequence'), 'VERHUUR', 'ROTTERDAM');
+
 
 
 -- S1.4. Adressen
@@ -69,19 +77,30 @@
 --    telefoon      10 cijfers, uniek
 --    med_mnr       FK, verplicht
 
+CREATE TABLE adressen(
+    postcode VARCHAR(6) CHECK (postcode LIKE '[0-9][0-9][0-9][0-9][a-z][a-z]'),
+    huisnummer VARCHAR,
+    ingangsdatum DATE,
+    einddatum DATE CHECK (einddatum > ingangsdatum ),
+    telefoon NUMERIC(10) UNIQUE,
+    med_mnr numeric NOT NULL,
+    PRIMARY KEY (postcode, huisnummer, ingangsdatum),
+    FOREIGN KEY (med_mnr) REFERENCES medewerkers(mnr)
+);
+
+
+
 
 -- S1.5. Commissie
 --
 -- De commissie van een medewerker (kolom `comm`) moet een bedrag bevatten als de medewerker een functie als
 -- 'VERKOPER' heeft, anders moet de commissie NULL zijn. Schrijf hiervoor een beperkingsregel. Gebruik onderstaande
 -- 'illegale' INSERTs om je beperkingsregel te controleren.
+-- INSERT INTO medewerkers (mnr, naam, voorl, functie, chef, gbdatum, maandsal, comm) VALUES (8001, 'MULLER', 'TJ', 'TRAINER', 7566, '1982-08-18', 2000, 500);
 
-INSERT INTO medewerkers (mnr, naam, voorl, functie, chef, gbdatum, maandsal, comm)
-VALUES (8001, 'MULLER', 'TJ', 'TRAINER', 7566, '1982-08-18', 2000, 500);
-
-INSERT INTO medewerkers (mnr, naam, voorl, functie, chef, gbdatum, maandsal, comm)
-VALUES (8002, 'JANSEN', 'M', 'VERKOPER', 7698, '1981-07-17', 1000, NULL);
-
+-- INSERT INTO medewerkers (mnr, naam, voorl, functie, chef, gbdatum, maandsal, comm)
+-- VALUES (8002, 'JANSEN', 'M', 'VERKOPER', 7698, '1981-07-17', 1000, NULL);
+ALTER TABLE medewerkers ADD CHECK (comm = 'VERKOPER'  )
 
 
 -- -------------------------[ HU TESTRAAMWERK ]--------------------------------

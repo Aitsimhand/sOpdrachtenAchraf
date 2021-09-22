@@ -25,24 +25,22 @@
 -- Lever je werk pas in op Canvas als alle tests slagen.
 -- ------------------------------------------------------------------------
 
-
 -- S3.1.
 -- Produceer een overzicht van alle cursusuitvoeringen; geef de
 -- code, de begindatum, de lengte en de naam van de docent.
 -- DROP VIEW IF EXISTS s3_1; CREATE OR REPLACE VIEW s3_1 AS                                                     -- [TEST]
-
+SELECT inschrijvingen.cursus, inschrijvingen.begindatum, cursussen.lengte, medewerkers.naam FROM inschrijvingen, cursussen, medewerkers;
 
 -- S3.2.
 -- Geef in twee kolommen naast elkaar de achternaam van elke cursist (`cursist`)
 -- van alle S02-cursussen, met de achternaam van zijn cursusdocent (`docent`).
 -- DROP VIEW IF EXISTS s3_2; CREATE OR REPLACE VIEW s3_2 AS                                                     -- [TEST]
 
-
 -- S3.3.
 -- Geef elke afdeling (`afdeling`) met de naam van het hoofd van die
 -- afdeling (`hoofd`).
 -- DROP VIEW IF EXISTS s3_3; CREATE OR REPLACE VIEW s3_3 AS                                                     -- [TEST]
-
+SELECT afdelingen.anr, afdelingen.naam, afdelingen.locatie, afdelingen.hoofd FROM afdelingen JOIN medewerkers ON afdelingen.hoofd = medewerkers.mnr ;
 
 -- S3.4.
 -- Geef de namen van alle medewerkers, de naam van hun afdeling (`afdeling`)
