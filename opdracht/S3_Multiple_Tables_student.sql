@@ -34,18 +34,22 @@ SELECT inschrijvingen.cursus, inschrijvingen.begindatum, cursussen.lengte, medew
 -- S3.2.
 -- Geef in twee kolommen naast elkaar de achternaam van elke cursist (`cursist`)
 -- van alle S02-cursussen, met de achternaam van zijn cursusdocent (`docent`).
+-- cusrsist staan in inschrijvingen en docent staat in uitvoeringen. De naam van de mensen staan allebei
+-- in medewerkers.
 -- DROP VIEW IF EXISTS s3_2; CREATE OR REPLACE VIEW s3_2 AS                                                     -- [TEST]
 
 SELECT medewerkers.naam as mw1, medewerkers.naam as mw2 FROM medewerkers
-    JOIN uitvoeringen u on u.cursus = 'S02'
     JOIN inschrijvingen i on i.cursist = medewerkers.mnr
-    JOIN uitvoeringen  on uitvoeringen.docent = medewerkers.mnr;
+    JOIN uitvoeringen u on u.docent = medewerkers.mnr;
+
+SELECT A.naam AS docentNaam, B.naam AS curcistNaam FROM medewerkers A, medewerkers B
+WHERE A.naam <> B.naam;
+
+SELECT a.mnr, a.naam, b.mnr , b.naam as docentNaam FROM medewerkers a JOIN medewerkers b on a.mnr = b.mnr;
+
+SELECT cursist, naam FROM inschrijvingen, medewerkers WHERE cursist = medewerkers.mnr;
 
 
-SELECT cursist, naam FROM inschrijvingen, medewerkers WHERE cursist = medewerkers.mnr ;
-
---cusrsist staan in inschrijvingen en docent staat in uitvoeringen. De naam van de mensen staan allebei
---in medewerkers.
 
 SELECT * FROM uitvoeringen JOIN cursussen c on c.code = uitvoeringen.cursus;
 -- S3.3.
