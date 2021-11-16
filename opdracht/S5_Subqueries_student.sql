@@ -33,26 +33,55 @@
 -- gevolgd? Geef hun personeelsnummers.
 -- DROP VIEW IF EXISTS s5_1; CREATE OR REPLACE VIEW s5_1 AS                                                     -- [TEST]
 
+SELECT ins.cursist
+FROM inschrijvingen ins
+WHERE ins.cursus = 'JAV'
+AND ins.cursist IN
+      (
+      SELECT ins.cursist
+      FROM inschrijvingen ins
+      WHERE ins.cursus = 'XML'
+          );
 
 -- S5.2.
--- Geef de nummers van alle medewerkers die niet aan de afdeling 'OPLEIDINGEN'
+-- Geef de nummers van alle medewerkers die niet aan de afdeling 'OPLEIDINGEN' #TODO!!!!
 -- zijn verbonden.
 -- DROP VIEW IF EXISTS s5_2; CREATE OR REPLACE VIEW s5_2 AS                                                     -- [TEST]
 
+SELECT mw.mnr FROM medewerkers mw WHERE mw.afd != 20;
 
 -- S5.3.
 -- Geef de nummers van alle medewerkers die de Java-cursus niet hebben
 -- gevolgd.
 -- DROP VIEW IF EXISTS s5_3; CREATE OR REPLACE VIEW s5_3 AS                                                     -- [TEST]
-
+SELECT mw.mnr
+FROM medewerkers mw
+WHERE mw.mnr NOT IN
+      (
+        SELECT ins.cursist
+        FROM inschrijvingen ins
+        WHERE ins.cursus = 'JAV'
+        ) ;
 
 -- S5.4.
 -- a. Welke medewerkers hebben ondergeschikten? Geef hun naam.
 -- DROP VIEW IF EXISTS s5_4a; CREATE OR REPLACE VIEW s5_4a AS                                                   -- [TEST]
+SELECT mw.naam, mw.functie
+FROM medewerkers mw
+WHERE mw.mnr IN
+      (
+      SELECT mw.chef
+      FROM medewerkers mw
+        );
 
--- b. En welke medewerkers hebben geen ondergeschikten? Geef wederom de naam.
+-- b. En welke medewerkers hebben geen ondergeschikten? Geef wederom de naam. #TODO!!
 -- DROP VIEW IF EXISTS s5_4b; CREATE OR REPLACE VIEW s5_4b AS                                                   -- [TEST]
-
+SELECT mw.naam, mw.functie
+FROM medewerkers mw
+WHERE mw.mnr
+          NOT IN (
+    SELECT mw2.chef FROM medewerkers mw2
+    );
 
 -- S5.5.
 -- Geef cursuscode en begindatum van alle uitvoeringen van programmeercursussen
