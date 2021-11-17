@@ -87,6 +87,14 @@ WHERE mw.mnr
 -- Geef cursuscode en begindatum van alle uitvoeringen van programmeercursussen
 -- ('BLD') in 2020.
 -- DROP VIEW IF EXISTS s5_5; CREATE OR REPLACE VIEW s5_5 AS                                                     -- [TEST]
+SELECT uit.cursus, uit.begindatum
+FROM uitvoeringen uit
+WHERE uit.cursus =
+      'BLD' IN -- Er zijn geen uitvoeringen van deze cursus in mijn database, vandaar dat er bij mij een error gegeven wordt.
+      (SELECT uit.cursus, uit.begindatum
+       FROM uitvoeringen uit
+       WHERE EXTRACT(YEAR FROM uit.begindatum) = '2020');
+
 
 
 -- S5.6.
@@ -94,16 +102,34 @@ WHERE mw.mnr
 -- aantal inschrijvingen (`aantal_inschrijvingen`). Sorteer op begindatum.
 -- DROP VIEW IF EXISTS s5_6; CREATE OR REPLACE VIEW s5_6 AS                                                     -- [TEST]
 
+SELECT ins.cursus, ins.begindatum, count(*) AS aantal_inschrijvingen
+FROM inschrijvingen ins
+GROUP BY ins.cursus, ins.begindatum
+ORDER BY ins.begindatum;
+
 
 -- S5.7.
 -- Geef voorletter(s) en achternaam van alle trainers die ooit tijdens een
--- algemene ('ALG') cursus hun eigen chef als cursist hebben gehad.
+-- algemene ('ALG') cursus hun eigen chef als cursist hebben gehad. (cursussen, uitvoeringen, inschrijvingen, medewerkers)
 -- DROP VIEW IF EXISTS s5_7; CREATE OR REPLACE VIEW s5_7 AS                                                     -- [TEST]
+SELECT  mw.naam
+FROM medewerkers mw
+WHERE mw.mnr IN (SELECT ins.cursist FROM inschrijvingen ins WHERE ins.cursist IN (SELECT * FROM cursussen cur WHERE cur.type = 'ALG'));
 
+SELECT cur.code AS code FROM cursussen cur WHERE type = 'ALG'; --Hier hebben we de cursus naam opgehaald waar het type ALG is.
+SELECT uit.docent FROM uitvoeringen uit, cursussen cur JOIN medewerkers mw on mw.mnr = uit.docent; --Hier halen we dus uit de ander table die we net hebben opgehaad het docent nummer om vervolgens te kunnen gebruiken als medewerkers nummer.
+SELECT mw.voorl, mw.naam FROM medewerkers mw, inschrijvingen ins WHERE ins.cursist = mw.chef; --
+
+SELECT mw.voorl, mw.naam FROM medewerkers mw, inschrijvingen ins WHERE ins.cursist = mw.chef AND IN;
 
 -- S5.8.
 -- Geef de naam van de medewerkers die nog nooit een cursus hebben gegeven.
 -- DROP VIEW IF EXISTS s5_8; CREATE OR REPLACE VIEW s5_8 AS                                                     -- [TEST]
+
+-- Had to add the IS NOT NULL, because the boolean expression wil evaluate to neither true or false.
+SELECT mw.naam
+FROM medewerkers mw
+WHERE mw.mnr NOT in (SELECT uit.docent FROM uitvoeringen uit WHERE uit.docent IS NOT NULL);
 
 
 

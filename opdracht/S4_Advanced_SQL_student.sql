@@ -44,13 +44,13 @@ SELECT mw.naam FROM medewerkers mw where naam LIKE '% %';
 -- cursusuitvoeringen in 2019 met minstens drie inschrijvingen.
 -- DROP VIEW IF EXISTS s4_3; CREATE OR REPLACE VIEW s4_3 AS                                                     -- [TEST]
 
-SELECT  inschrijvingen.cursus, count(*),  inschrijvingen.begindatum FROM inschrijvingen GROUP BY inschrijvingen.cursus, inschrijvingen.begindatum HAVING count(*) >= 3 AND inschrijvingen.begindatum <= '2020-01-01';
+SELECT  inschrijvingen.cursus, count(*),  inschrijvingen.begindatum FROM inschrijvingen GROUP BY inschrijvingen.cursus, inschrijvingen.begindatum HAVING count(*) >= 3 AND inschrijvingen.begindatum < '2020-01-01';
 
 -- S4.4.
 -- Welke medewerkers hebben een bepaalde cursus meer dan één keer gevolgd?
 -- Geef medewerkernummer en cursuscode.
 -- DROP VIEW IF EXISTS s4_4; CREATE OR REPLACE VIEW s4_4 AS                                                     -- [TEST]
-SELECT ins.cursist, count(*) , ins.cursus FROM inschrijvingen ins GROUP BY ins.cursist, ins.cursus HAVING count(*) >1;
+SELECT ins.cursist, count(*) , ins.cursus FROM inschrijvingen ins GROUP BY ins.cursist, ins.cursus HAVING count(*) > 1;
 
 -- S4.5.
 -- Hoeveel uitvoeringen (`aantal`) zijn er gepland per cursus? #group by
