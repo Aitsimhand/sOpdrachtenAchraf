@@ -34,6 +34,14 @@ SELECT * FROM dagcursussen;
 
 -- 2. Maak een tweede view met de naam "daguitvoeringen".
 --    Deze view dient de uitvoeringsgegevens op te halen voor de "dagcurssussen" (gebruik ook de view "dagcursussen"). Toon aan dat de view werkt
-CREATE OR REPLACE VIEW daguitvoeringen AS SELECT * FROM uitvoeringen uit JOIN dagcursussen JOIN dagcursussen ON code ;
+CREATE OR REPLACE VIEW daguitvoeringen AS SELECT * FROM uitvoeringen uit JOIN dagcursussen ON uit.cursus = dagcursussen.code ;
 -- 3. Verwijder de views en laat zien wat de verschillen zijn bij DROP view <viewnaam> CASCADE en bij DROP view <viewnaam> RESTRICT
+DROP VIEW dagcursussen RESTRICT;
+DROP VIEW daguitvoeringen RESTRICT;
+
+DROP VIEW dagcursussen CASCADE;
+DROP VIEW daguitvoeringen CASCADE;
+
+-- Het grote verschil is bij een restrict drop dat er word gekeken of er obkjecten zijn die afhankelijk zijn van de te verwijderen view, zo ja dan word de drop niet uitgevoerd en krijg je een foutmelding.
+-- Bij een drop met CASCADE wordt er juist helemaal geen rekening gehouden met dependencies.
 
