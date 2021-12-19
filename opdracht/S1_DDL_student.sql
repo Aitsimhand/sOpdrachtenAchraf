@@ -34,9 +34,11 @@
 -- die ervoor zorgt dat alleen 'M' of 'V' als geldige waarde wordt
 -- geaccepteerd. Test deze regel en neem de gegooide foutmelding op als
 -- commentaar in de uitwerking.
-ALTER TABLE medewerkers ADD column geslacht varchar(1);
+ALTER TABLE medewerkers
+    ADD column geslacht varchar(1);
 
-ALTER TABLE medewerkers ADD constraint geslacht CHECK (geslacht = 'M' OR 'V');
+ALTER TABLE medewerkers
+    ADD constraint geslacht CHECK (geslacht = 'M' OR 'V');
 
 
 -- S1.2. Nieuwe afdeling
@@ -46,8 +48,10 @@ ALTER TABLE medewerkers ADD constraint geslacht CHECK (geslacht = 'M' OR 'V');
 -- nieuwe medewerker A DONK aangenomen. Hij krijgt medewerkersnummer 8000
 -- en valt direct onder de directeur.
 -- Voeg de nieuwe afdeling en de nieuwe medewerker toe aan de database.
-INSERT INTO afdelingen (anr, naam, locatie) VALUES (50, 'ONDERZOEK', 'ZWOLLE');
-INSERT INTO medewerkers (mnr, naam, voorl, functie, chef, gbdatum, maandsal, comm, afd, geslacht) VALUES (8000, 'DONK', 'A', 'DIRECTEUR', null, '1997-10-24', 5000, null, 50, 'M');
+INSERT INTO afdelingen (anr, naam, locatie)
+VALUES (50, 'ONDERZOEK', 'ZWOLLE');
+INSERT INTO medewerkers (mnr, naam, voorl, functie, chef, gbdatum, maandsal, comm, afd, geslacht)
+VALUES (8000, 'DONK', 'A', 'DIRECTEUR', null, '1997-10-24', 5000, null, 50, 'M');
 
 -- S1.3. Verbetering op afdelingentabel
 --
@@ -59,8 +63,10 @@ INSERT INTO medewerkers (mnr, naam, voorl, functie, chef, gbdatum, maandsal, com
 --   c) Op enig moment gaat het mis. De betreffende kolommen zijn te klein voor
 --      nummers van 3 cijfers. Los dit probleem op.
 CREATE SEQUENCE afdelingnummersequence INCREMENT BY 10 START WITH 60;
-INSERT INTO afdelingen (anr, naam, locatie) VALUES (nextval('afdelingnummer_sequence'), 'FINANCIEN', 'UTRECHT');
-INSERT INTO afdelingen (anr, naam, locatie) VALUES (nextval('afdelingnummer_sequence'), 'VERHUUR', 'ROTTERDAM');
+INSERT INTO afdelingen (anr, naam, locatie)
+VALUES (nextval('afdelingnummer_sequence'), 'FINANCIEN', 'UTRECHT');
+INSERT INTO afdelingen (anr, naam, locatie)
+VALUES (nextval('afdelingnummer_sequence'), 'VERHUUR', 'ROTTERDAM');
 
 
 
@@ -77,17 +83,17 @@ INSERT INTO afdelingen (anr, naam, locatie) VALUES (nextval('afdelingnummer_sequ
 --    telefoon      10 cijfers, uniek
 --    med_mnr       FK, verplicht
 
-CREATE TABLE adressen(
-    postcode VARCHAR(6) CHECK (postcode LIKE '[0-9][0-9][0-9][0-9][a-z][a-z]'),
-    huisnummer VARCHAR,
+CREATE TABLE adressen
+(
+    postcode     VARCHAR(6) CHECK (postcode LIKE '[0-9][0-9][0-9][0-9][a-z][a-z]'),
+    huisnummer   VARCHAR,
     ingangsdatum DATE,
-    einddatum DATE CHECK (einddatum > ingangsdatum ),
-    telefoon NUMERIC(10) UNIQUE,
-    med_mnr numeric NOT NULL,
+    einddatum    DATE CHECK (einddatum > ingangsdatum ),
+    telefoon     NUMERIC(10) UNIQUE,
+    med_mnr      numeric NOT NULL,
     PRIMARY KEY (postcode, huisnummer, ingangsdatum),
-    FOREIGN KEY (med_mnr) REFERENCES medewerkers(mnr)
+    FOREIGN KEY (med_mnr) REFERENCES medewerkers (mnr)
 );
-
 
 
 
@@ -100,20 +106,24 @@ CREATE TABLE adressen(
 
 -- INSERT INTO medewerkers (mnr, naam, voorl, functie, chef, gbdatum, maandsal, comm)
 -- VALUES (8002, 'JANSEN', 'M', 'VERKOPER', 7698, '1981-07-17', 1000, NULL);
-ALTER TABLE medewerkers ADD CHECK (comm = 'VERKOPER'  )
+ALTER TABLE medewerkers
+    ADD CHECK (comm = 'VERKOPER' )
 
 
 -- -------------------------[ HU TESTRAAMWERK ]--------------------------------
 -- Met onderstaande query kun je je code testen. Zie bovenaan dit bestand
 -- voor uitleg.
 
-SELECT * FROM test_exists('S1.1', 1) AS resultaat
+SELECT *
+FROM test_exists('S1.1', 1) AS resultaat
 UNION
-SELECT * FROM test_exists('S1.2', 1) AS resultaat
+SELECT *
+FROM test_exists('S1.2', 1) AS resultaat
 UNION
 SELECT 'S1.3 wordt niet getest: geen test mogelijk.' AS resultaat
 UNION
-SELECT * FROM test_exists('S1.4', 6) AS resultaat
+SELECT *
+FROM test_exists('S1.4', 6) AS resultaat
 UNION
 SELECT 'S1.5 wordt niet getest: handmatige test beschikbaar.' AS resultaat
 ORDER BY resultaat;
@@ -121,9 +131,21 @@ ORDER BY resultaat;
 
 -- Draai alle wijzigingen terug om conflicten in komende opdrachten te voorkomen.
 DROP TABLE IF EXISTS adressen;
-UPDATE medewerkers SET afd = NULL WHERE mnr < 7369 OR mnr > 7934;
-UPDATE afdelingen SET hoofd = NULL WHERE anr > 40;
-DELETE FROM afdelingen WHERE anr > 40;
-DELETE FROM medewerkers WHERE mnr < 7369 OR mnr > 7934;
-ALTER TABLE medewerkers DROP CONSTRAINT IF EXISTS m_geslacht_chk;
-ALTER TABLE medewerkers DROP COLUMN IF EXISTS geslacht;
+UPDATE medewerkers
+SET afd = NULL
+WHERE mnr < 7369
+   OR mnr > 7934;
+UPDATE afdelingen
+SET hoofd = NULL
+WHERE anr > 40;
+DELETE
+FROM afdelingen
+WHERE anr > 40;
+DELETE
+FROM medewerkers
+WHERE mnr < 7369
+   OR mnr > 7934;
+ALTER TABLE medewerkers
+    DROP CONSTRAINT IF EXISTS m_geslacht_chk;
+ALTER TABLE medewerkers
+    DROP COLUMN IF EXISTS geslacht;

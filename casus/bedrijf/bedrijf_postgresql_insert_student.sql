@@ -8,7 +8,8 @@
 -- Tijmen Muller (tijmen.muller@hu.nl)
 -- André Donk (andre.donk@hu.nl)
 -- ------------------------------------------------------------------------
-SET DATESTYLE = 'DMY'; -- voor het date format in de inserts
+SET DATESTYLE = 'DMY';
+-- voor het date format in de inserts
 
 -- Vul de tabellen
 

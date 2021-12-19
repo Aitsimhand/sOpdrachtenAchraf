@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * Testklasse - deze klasse test alle andere klassen in deze package.
- *
+ * <p>
  * System.out.println() is alleen in deze klasse toegestaan (behalve voor exceptions).
  *
  * @author tijmen.muller@hu.nl

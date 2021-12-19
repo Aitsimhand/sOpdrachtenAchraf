@@ -14,7 +14,7 @@
 -- DROP DATABASE bedrijf;
 
 CREATE DATABASE bedrijf
-    WITH 
+    WITH
     OWNER = postgres
     ENCODING = 'UTF8'
     -- LC_COLLATE = 'Dutch_Netherlands.1252'

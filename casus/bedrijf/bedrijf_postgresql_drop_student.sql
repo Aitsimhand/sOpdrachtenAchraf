@@ -9,11 +9,11 @@
 -- André Donk (andre.donk@hu.nl)
 -- ------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS medewerkers      CASCADE;
-DROP TABLE IF EXISTS afdelingen       CASCADE;
-DROP TABLE IF EXISTS schalen          CASCADE;
-DROP TABLE IF EXISTS cursussen        CASCADE;
-DROP TABLE IF EXISTS uitvoeringen     CASCADE;
-DROP TABLE IF EXISTS inschrijvingen   CASCADE;
-DROP TABLE IF EXISTS historie         CASCADE;
-DROP TABLE IF EXISTS adressen         CASCADE;
+DROP TABLE IF EXISTS medewerkers CASCADE;
+DROP TABLE IF EXISTS afdelingen CASCADE;
+DROP TABLE IF EXISTS schalen CASCADE;
+DROP TABLE IF EXISTS cursussen CASCADE;
+DROP TABLE IF EXISTS uitvoeringen CASCADE;
+DROP TABLE IF EXISTS inschrijvingen CASCADE;
+DROP TABLE IF EXISTS historie CASCADE;
+DROP TABLE IF EXISTS adressen CASCADE;

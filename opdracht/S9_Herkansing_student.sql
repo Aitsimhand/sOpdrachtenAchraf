@@ -32,8 +32,8 @@
 -- Hij komt direct onder de directeur te vallen en gaat 2100 euro per
 -- maand verdienen.
 -- Voer alle queries uit om deze wijziging door te voeren.
-INSERT
-ON CONFLICT DO NOTHING;                                                                                         -- [TEST]
+UPDATE medewerkers SET functie = 'MANAGER', chef = 7788, maandsal = 2100 WHERE naam = 'DEN DRAAIER' AND mnr = 7844;
+-- [TEST]
 
 
 -- S9.2  Beginjaar
@@ -43,7 +43,10 @@ ON CONFLICT DO NOTHING;                                                         
 -- correcte waarde heeft, met andere woorden: dat het om het huidige jaar
 -- gaat of een jaar dat in het verleden ligt.
 -- Test je beperkingsregel daarna met een INSERT die deze regel schendt.
+ALTER TABLE historie ADD constraint h_beginjaar_chk CHECK ( beginjaar <= 2021 );
+INSERT INTO historie (mnr, beginjaar, begindatum, einddatum, afd, maandsal) VALUES (7788, 2022, '2022-12-01', '2023-12-1', 40, 2100);
 
+-- Output[2021-12-19 18:25:55] [23514] ERROR: new row for relation "historie" violates check constraint "h_beginjaar_chk"
 
 -- S9.3  Opmerkingen
 --
@@ -51,7 +54,7 @@ ON CONFLICT DO NOTHING;                                                         
 -- van medewerkers binnen het bedrijf. Geef ter referentie ook het medewerkersnummer
 -- bij de resultaten.
 -- DROP VIEW IF EXISTS s9_3; CREATE OR REPLACE VIEW s9_3 AS                                                     -- [TEST]
-
+SELECT opmerkingen, mnr FROM historie WHERE opmerkingen != '';
 
 -- S9.4  Carrièrepad
 --
@@ -61,7 +64,7 @@ ON CONFLICT DO NOTHING;                                                         
 -- moment (`afdeling`) en hun toenmalige salarisschaal (`schaal`).
 -- Sorteer eerst op naam en dan op ingangsdatum.
 -- DROP VIEW IF EXISTS s9_4; CREATE OR REPLACE VIEW s9_4 AS                                                     -- [TEST]
-
+SELECT mw.naam, hs.begindatum, hs.afd AS afdeling, hs.maandsal AS schaal  FROM historie hs INNER JOIN medewerkers mw ON hs.mnr = mw.mnr ORDER BY mw.naam, hs.begindatum;
 
 -- S9.5 Aanloop
 --
@@ -70,26 +73,28 @@ ON CONFLICT DO NOTHING;                                                         
 -- Rond naar beneden af op gehele jaren.
 -- DROP VIEW IF EXISTS s9_5; CREATE OR REPLACE VIEW s9_5 AS                                                     -- [TEST]
 
-
 -- S9.6 Index
 --
 -- Maak een index `historie_afd_idx` op afdelingsnummer in de historietabel.
-
-
+CREATE INDEX historie_afd_idx ON historie (afd);
 
 -- -------------------------[ HU TESTRAAMWERK ]--------------------------------
 -- Met onderstaande query kun je je code testen. Zie bovenaan dit bestand
 -- voor uitleg.
 
-SELECT * FROM test_exists('S9.1', 1) AS resultaat
+SELECT *
+FROM test_exists('S9.1', 1) AS resultaat
 UNION
 SELECT 'S9.2 wordt niet getest: zelf handmatig testen.' AS resultaat
 UNION
-SELECT * FROM test_select('S9.3') AS resultaat
+SELECT *
+FROM test_select('S9.3') AS resultaat
 UNION
-SELECT * FROM test_select('S9.4') AS resultaat
+SELECT *
+FROM test_select('S9.4') AS resultaat
 UNION
-SELECT * FROM test_select('S9.5') AS resultaat
+SELECT *
+FROM test_select('S9.5') AS resultaat
 UNION
 SELECT 'S9.6 wordt niet getest: geen test mogelijk.' AS resultaat
 ORDER BY resultaat;

@@ -26,7 +26,8 @@
         Filter: (stock_item_id = 9)
 */
 -- 2. Voeg een index op stock_item_id toe:
---    CREATE INDEX ord_lines_si_id_idx ON order_lines (stock_item_id);
+
+CREATE INDEX ord_lines_si_id_idx ON order_lines (stock_item_id);
 -- 3. Analyseer opnieuw met EXPLAIN hoe de query nu uitgevoerd wordt
 --    Kopieer het explain plan onderaan de opdracht
 
@@ -43,11 +44,18 @@
 --
 -- 1. Maak de volgende twee query’s:
 -- 	  A. Toon uit de order tabel de order met order_id = 73590
-SELECT * FROM order_lines WHERE order_id = 73590;
+SELECT *
+FROM order_lines
+WHERE order_id = 73590;
 -- 	  B. Toon uit de order tabel de order met customer_id = 1028
-SELECT * FROM order_lines WHERE order_id = 1028;
+SELECT *
+FROM order_lines
+WHERE order_id = 1028;
 -- 2. Analyseer met EXPLAIN hoe de query’s uitgevoerd worden en kopieer het explain plan onderaan de opdracht
-EXPLAIN SELECT * FROM order_lines WHERE order_id = 1028;
+EXPLAIN ANALYZE
+SELECT *
+FROM order_lines
+WHERE order_id = 1028;
 
 /*
 
@@ -59,7 +67,10 @@ Gather  (cost=1000.00..6051.67 rows=4 width=96)
 
 */
 
-EXPLAIN SELECT * FROM order_lines WHERE order_id = 73590;
+EXPLAIN
+SELECT *
+FROM order_lines
+WHERE order_id = 73590;
 
 /*
 Gather  (cost=1000.00..6051.67 rows=4 width=96)
@@ -99,7 +110,7 @@ Index Scan using order_lines_index on order_lines  (cost=0.42..8.49 rows=4 width
 -- Maak om dit te bereiken een subquery in je WHERE clause.
 -- Sorteer het resultaat van de hele geheel op levertijd (desc) en verkoper.
 -- 1. Maak hieronder deze query (als je het goed doet zouden er 377 rijen uit moeten komen, en het kan best even duren...)
-
+CREATE INDEX delivery_time ON orders (order_id ASC )
 
 -- S7.3.B
 --
@@ -107,7 +118,6 @@ Index Scan using order_lines_index on order_lines  (cost=0.42..8.49 rows=4 width
 -- 2. Kijk of je met 1 of meer indexen de query zou kunnen versnellen
 -- 3. Maak de index(en) aan en run nogmaals het EXPLAIN plan (kopieer weer onder de opdracht)
 -- 4. Wat voor verschillen zie je? Verklaar hieronder.
-
 
 
 -- S7.3.C

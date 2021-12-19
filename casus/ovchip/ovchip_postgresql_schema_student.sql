@@ -11,7 +11,7 @@
 -- DROP DATABASE ovchip;
 
 CREATE DATABASE ovchip
-    WITH 
+    WITH
     OWNER = postgres
     ENCODING = 'UTF8'
     -- LC_COLLATE = 'Dutch_Netherlands.1252'

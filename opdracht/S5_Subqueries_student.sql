@@ -36,19 +36,21 @@
 SELECT ins.cursist
 FROM inschrijvingen ins
 WHERE ins.cursus = 'JAV'
-AND ins.cursist IN
+  AND ins.cursist IN
       (
-      SELECT ins.cursist
-      FROM inschrijvingen ins
-      WHERE ins.cursus = 'XML'
-          );
+          SELECT ins.cursist
+          FROM inschrijvingen ins
+          WHERE ins.cursus = 'XML'
+      );
 
 -- S5.2.
 -- Geef de nummers van alle medewerkers die niet aan de afdeling 'OPLEIDINGEN' #TODO!!!!
 -- zijn verbonden.
 -- DROP VIEW IF EXISTS s5_2; CREATE OR REPLACE VIEW s5_2 AS                                                     -- [TEST]
 
-SELECT mw.mnr FROM medewerkers mw WHERE mw.afd != 20;
+SELECT mw.mnr
+FROM medewerkers mw
+WHERE mw.afd != 20;
 
 -- S5.3.
 -- Geef de nummers van alle medewerkers die de Java-cursus niet hebben
@@ -58,10 +60,10 @@ SELECT mw.mnr
 FROM medewerkers mw
 WHERE mw.mnr NOT IN
       (
-        SELECT ins.cursist
-        FROM inschrijvingen ins
-        WHERE ins.cursus = 'JAV'
-        ) ;
+          SELECT ins.cursist
+          FROM inschrijvingen ins
+          WHERE ins.cursus = 'JAV'
+      );
 
 -- S5.4.
 -- a. Welke medewerkers hebben ondergeschikten? Geef hun naam.
@@ -70,9 +72,9 @@ SELECT mw.naam, mw.functie
 FROM medewerkers mw
 WHERE mw.mnr IN
       (
-      SELECT mw.chef
-      FROM medewerkers mw
-        );
+          SELECT mw.chef
+          FROM medewerkers mw
+      );
 
 -- b. En welke medewerkers hebben geen ondergeschikten? Geef wederom de naam. #TODO!!
 -- DROP VIEW IF EXISTS s5_4b; CREATE OR REPLACE VIEW s5_4b AS                                                   -- [TEST]
@@ -80,8 +82,9 @@ SELECT mw.naam, mw.functie
 FROM medewerkers mw
 WHERE mw.mnr
           NOT IN (
-    SELECT mw2.chef FROM medewerkers mw2
-    );
+          SELECT mw2.chef
+          FROM medewerkers mw2
+      );
 
 -- S5.5.
 -- Geef cursuscode en begindatum van alle uitvoeringen van programmeercursussen
@@ -112,15 +115,28 @@ ORDER BY ins.begindatum;
 -- Geef voorletter(s) en achternaam van alle trainers die ooit tijdens een
 -- algemene ('ALG') cursus hun eigen chef als cursist hebben gehad. (cursussen, uitvoeringen, inschrijvingen, medewerkers)
 -- DROP VIEW IF EXISTS s5_7; CREATE OR REPLACE VIEW s5_7 AS                                                     -- [TEST]
-SELECT  mw.naam
+SELECT mw.naam
 FROM medewerkers mw
-WHERE mw.mnr IN (SELECT ins.cursist FROM inschrijvingen ins WHERE ins.cursist IN (SELECT * FROM cursussen cur WHERE cur.type = 'ALG'));
+WHERE mw.mnr IN (SELECT ins.cursist
+                 FROM inschrijvingen ins
+                 WHERE ins.cursist IN (SELECT * FROM cursussen cur WHERE cur.type = 'ALG'));
 
-SELECT cur.code AS code FROM cursussen cur WHERE type = 'ALG'; --Hier hebben we de cursus naam opgehaald waar het type ALG is.
-SELECT uit.docent FROM uitvoeringen uit, cursussen cur JOIN medewerkers mw on mw.mnr = uit.docent; --Hier halen we dus uit de ander table die we net hebben opgehaad het docent nummer om vervolgens te kunnen gebruiken als medewerkers nummer.
-SELECT mw.voorl, mw.naam FROM medewerkers mw, inschrijvingen ins WHERE ins.cursist = mw.chef; --
+SELECT cur.code AS code
+FROM cursussen cur
+WHERE type = 'ALG'; --Hier hebben we de cursus naam opgehaald waar het type ALG is.
+SELECT uit.docent
+FROM uitvoeringen uit,
+     cursussen cur
+         JOIN medewerkers mw on mw.mnr = uit.docent; --Hier halen we dus uit de ander table die we net hebben opgehaad het docent nummer om vervolgens te kunnen gebruiken als medewerkers nummer.
+SELECT mw.voorl, mw.naam
+FROM medewerkers mw,
+     inschrijvingen ins
+WHERE ins.cursist = mw.chef; --
 
-SELECT mw.voorl, mw.naam FROM medewerkers mw, inschrijvingen ins WHERE ins.cursist = mw.chef AND IN;
+SELECT mw.voorl, mw.naam
+FROM medewerkers mw,
+     inschrijvingen ins
+WHERE ins.cursist = mw.chef AND IN;
 
 -- S5.8.
 -- Geef de naam van de medewerkers die nog nooit een cursus hebben gegeven.
@@ -137,21 +153,30 @@ WHERE mw.mnr NOT in (SELECT uit.docent FROM uitvoeringen uit WHERE uit.docent IS
 -- Met onderstaande query kun je je code testen. Zie bovenaan dit bestand
 -- voor uitleg.
 
-SELECT * FROM test_select('S5.1') AS resultaat
+SELECT *
+FROM test_select('S5.1') AS resultaat
 UNION
-SELECT * FROM test_select('S5.2') AS resultaat
+SELECT *
+FROM test_select('S5.2') AS resultaat
 UNION
-SELECT * FROM test_select('S5.3') AS resultaat
+SELECT *
+FROM test_select('S5.3') AS resultaat
 UNION
-SELECT * FROM test_select('S5.4a') AS resultaat
+SELECT *
+FROM test_select('S5.4a') AS resultaat
 UNION
-SELECT * FROM test_select('S5.4b') AS resultaat
+SELECT *
+FROM test_select('S5.4b') AS resultaat
 UNION
-SELECT * FROM test_select('S5.5') AS resultaat
+SELECT *
+FROM test_select('S5.5') AS resultaat
 UNION
-SELECT * FROM test_select('S5.6') AS resultaat
+SELECT *
+FROM test_select('S5.6') AS resultaat
 UNION
-SELECT * FROM test_select('S5.7') AS resultaat
+SELECT *
+FROM test_select('S5.7') AS resultaat
 UNION
-SELECT * FROM test_select('S5.8') AS resultaat
+SELECT *
+FROM test_select('S5.8') AS resultaat
 ORDER BY resultaat;

@@ -26,11 +26,11 @@ CREATE TABLE adres
     woonplaats  VARCHAR(255) NOT NULL,
     reiziger_id NUMERIC(10)  NOT NULL REFERENCES reiziger (reiziger_id),
     PRIMARY KEY (adres_id),
-	UNIQUE (reiziger_id)
+    UNIQUE (reiziger_id)
 );
 
 ALTER TABLE adres
-ADD CONSTRAINT adres_reiziger_unique UNIQUE (reiziger_id);
+    ADD CONSTRAINT adres_reiziger_unique UNIQUE (reiziger_id);
 
 CREATE TABLE ov_chipkaart
 (
